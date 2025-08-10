@@ -67,7 +67,7 @@ class cuda_managed_ptr
    static const cudaResetter resetter;
    cuda_managed_ptr(const cuda_managed_ptr&) = delete;
    cuda_managed_ptr& operator=(cuda_managed_ptr const&) = delete;
-   void free()
+   void dispose()
    {
       if(data)
       {
@@ -98,14 +98,14 @@ public:
    }
    cuda_managed_ptr& operator=(cuda_managed_ptr&& o)
    {
-      free();
+      dispose();
       data = o.data;
       o.data = 0;
       return *this;
    }
    ~cuda_managed_ptr()
    {
-      free();
+      dispose();
    }
 
    class managed_holder : managed_holder_base
