@@ -80,7 +80,7 @@ enum
    func_y
 };
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    typedef number<mpfr_float_backend<500> > bignum;
 

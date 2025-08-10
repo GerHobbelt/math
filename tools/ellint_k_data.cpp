@@ -20,7 +20,7 @@ T ellint_k_data(T k)
    return ellint_1(k);
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

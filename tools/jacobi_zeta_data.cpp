@@ -20,7 +20,7 @@ mp_t jacobi_zeta(mp_t phi, mp_t k)
    return ellint_2(k, phi) - ellint_2(k) * ellint_1(k, phi) / ellint_1(k);
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

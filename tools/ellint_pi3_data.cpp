@@ -33,7 +33,7 @@ boost::math::tuple<mp_t, mp_t> generate_data(mp_t n, mp_t phi)
    return boost::math::make_tuple(kr, result);
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

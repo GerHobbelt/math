@@ -569,7 +569,7 @@ boost::math::tuple<mp_t, mp_t, mp_t, mp_t> generate_rg_xy0(mp_t x, mp_t y)
    return boost::math::make_tuple(x, y, mp_t(0), result);
 }
 
-int cpp_main(int argc, char*argv[])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

@@ -20,7 +20,7 @@ mp_t ellint_d(mp_t phi, mp_t k)
    return (boost::math::ellint_1(k, phi) - boost::math::ellint_2(k, phi)) / (k * k);
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

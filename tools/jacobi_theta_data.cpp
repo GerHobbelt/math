@@ -28,7 +28,7 @@ struct jacobi_theta_data_generator
    }
 };
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    parameter_info<mp_t> arg1, arg2;
    test_data<mp_t> data;

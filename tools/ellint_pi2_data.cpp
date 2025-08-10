@@ -15,7 +15,7 @@ using namespace boost::math::tools;
 using namespace boost::math;
 using namespace std;
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

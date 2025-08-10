@@ -25,7 +25,7 @@ float truncate_to_float(mp_t r)
    return force_truncate(&f);
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    parameter_info<mp_t> arg1;
    test_data<mp_t> data;

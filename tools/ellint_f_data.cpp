@@ -30,7 +30,7 @@ T ellint_f_data(T phi, T k)
    return ellint_1(k, phi);
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 

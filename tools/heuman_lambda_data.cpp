@@ -23,7 +23,7 @@ mp_t heuman_lambda(mp_t phi, mp_t k)
    return ellint_1(kp, phi) / ellint_1(kp) + ellint_1(k) * jacobi_zeta(kp, phi) / constants::half_pi<mp_t>();
 }
 
-int cpp_main(int argc, char*argv [])
+int cpp_main(int argc, const char** argv)
 {
    using namespace boost::math::tools;
 
