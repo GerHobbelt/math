@@ -152,6 +152,7 @@ extern "C++" {
 #include <boost/math/tools/fraction.hpp>
 #include <boost/math/tools/luroth_expansion.hpp>
 #include <boost/math/tools/minima.hpp>
+#include <boost/math/tools/multivariate_roots.hpp>
 #include <boost/math/tools/norms.hpp>
 #include <boost/math/tools/polynomial.hpp>
 #include <boost/math/tools/polynomial_roots.hpp>
@@ -203,15 +204,20 @@ extern "C++" {
 #include <boost/math/statistics/univariate_statistics.hpp>
 #include <boost/math/statistics/z_test.hpp>
 
-// Optimization (cma_es is excluded: it requires Eigen)
+// Optimization
+#include <boost/math/optimization/cma_es.hpp>
 #include <boost/math/optimization/differential_evolution.hpp>
+#include <boost/math/optimization/dycors.hpp>
 #include <boost/math/optimization/gradient_descent.hpp>
 #include <boost/math/optimization/gradient_optimizers.hpp>
 #include <boost/math/optimization/jso.hpp>
 #include <boost/math/optimization/lbfgs.hpp>
 #include <boost/math/optimization/minimizer.hpp>
+#include <boost/math/optimization/multilevel_coordinate_search.hpp>
 #include <boost/math/optimization/nesterov.hpp>
 #include <boost/math/optimization/random_search.hpp>
+#include <boost/math/optimization/trust_region_newton.hpp>
+#include <boost/math/optimization/turbo.hpp>
 
 // Differentiation. finite_difference and lanczos_smoothing must precede
 // autodiff: their unqualified detail:: references become ambiguous once

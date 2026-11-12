@@ -123,20 +123,21 @@ test-suite special_fun :
    [ run test_0F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=1 : test_0F1_1 ]
    [ run test_0F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 : test_0F1_2 ]
 
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=1 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_integrals ]
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_float ]
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_double ]
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_long_double ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=1 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_integrals ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_float ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_double ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_long_double ]
 
-   [ run test_1F1_regularized.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_float ]
-   [ run test_1F1_regularized.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_double ]
-   [ run test_1F1_regularized.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_long_double ]
-   [ run test_1F1_regularized.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=5 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_real_concept ]
+   [ run test_1F1_regularized.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_float ]
+   [ run test_1F1_regularized.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_double ]
+   [ run test_1F1_regularized.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_long_double ]
+   [ run test_1F1_regularized.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=5 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_real_concept ]
    #  These are slow...
-   [ run test_1F1_log.cpp /boost/test//boost_unit_test_framework : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_float ]
-   [ run test_1F1_log.cpp /boost/test//boost_unit_test_framework : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_double ]
-   [ run test_1F1_log.cpp /boost/test//boost_unit_test_framework : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_long_double ]
-   [ run test_1F1_log.cpp /boost/test//boost_unit_test_framework : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=5 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_real_concept ]
+   [ run test_1F1_log.cpp : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_float ]
+   [ run test_1F1_log.cpp : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_double ]
+   [ run test_1F1_log.cpp : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_long_double ]
+   [ run test_1F1_log.cpp : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=5 <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_log_real_concept ]
+   [ run test_1F1_x87_diagnostic.cpp : : : release ]
    # pFq:
    [ run test_pFq.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_hdr_initializer_list cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=2 release <toolset>clang:<cxxflags>-Wno-literal-range : test_pFq_float ]
    [ run test_pFq.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_hdr_initializer_list cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 release <toolset>clang:<cxxflags>-Wno-literal-range : test_pFq_double ]
@@ -147,6 +148,9 @@ test-suite special_fun :
    [ run test_hypot.cpp test_instances//test_instances pch_light /boost/test//boost_unit_test_framework ]
    [ run test_pow.cpp /boost/test//boost_unit_test_framework ]
    [ run test_pow1p.cpp ]
+   [ run test_spheroidal.cpp ]
+   [ run test_struve.cpp ]
+   [ run test_fresnel.cpp ]
    [ run test_logaddexp.cpp /boost/test//boost_unit_test_framework ]
    [ run test_logsumexp.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_hdr_initializer_list cxx11_variadic_templates ] ]
    [ run test_ccmath_sqrt.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx17_if_constexpr ] $(float128_type) ]
@@ -551,6 +555,8 @@ test-suite special_fun :
    [ run test_instantiate3.cpp ]
    [ run test_jacobi.cpp pch_light /boost/test//boost_unit_test_framework  ]
    [ run test_laguerre.cpp test_instances//test_instances pch_light /boost/test//boost_unit_test_framework  ]
+   [ run test_generalized_laguerre.cpp ]
+   [ run test_orthogonal_polynomial_zeros.cpp ]
 
    [ run test_lambert_w.cpp  ]
    [ run test_lambert_w.cpp : : : <define>BOOST_MATH_TEST_MULTIPRECISION=1  $(float128_type) [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_lambert_w_multiprecision_1 ]
@@ -1044,6 +1050,7 @@ test-suite misc :
    [ compile test_policy_9.cpp : <define>BOOST_MATH_PROMOTE_FLOAT_POLICY=false <define>BOOST_MATH_PROMOTE_DOUBLE_POLICY=false : test_policy_9_no_promotion ]
    [ run test_policy_10.cpp /boost/test//boost_unit_test_framework  ]
    [ run test_policy_sf.cpp /boost/test//boost_unit_test_framework  ]
+   [ run test_policy_fallbacks.cpp : : : [ check-target-builds ../config//has_float128 "GCC libquadmath and __float128 support" : <linkflags>-lquadmath ] ]
    [ run test_long_double_support.cpp /boost/test//boost_unit_test_framework
       : : : [ check-target-builds ../config//has_long_double_support "long double support" : : <build>no ] ]
    [ run test_recurrence.cpp : : : <define>TEST=1 [ requires cxx11_unified_initialization_syntax cxx11_hdr_tuple cxx11_auto_declarations cxx11_decltype ] <toolset>msvc:<cxxflags>/bigobj : test_recurrence_1 ]
@@ -1100,6 +1107,7 @@ test-suite misc :
    [ run test_root_iterations.cpp pch /boost/test//boost_unit_test_framework : : : [ requires cxx11_hdr_tuple ]  ]
    [ run test_root_finding_concepts.cpp /boost/test//boost_unit_test_framework  ]
    [ run test_toms748_solve.cpp pch /boost/test//boost_unit_test_framework  ]
+   [ run test_multivariate_roots.cpp : : : [ requires cxx14_return_type_deduction cxx14_generic_lambdas ] ]
    [ run  compile_test/test_interpolators_cubic_spline_incl.cpp compile_test_main : : :  [ requires cxx11_smart_ptr cxx11_defaulted_functions cxx11_auto_declarations ] [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ run  compile_test/test_interpolators_barycentric_rational_incl.cpp compile_test_main : : :  [ requires cxx11_smart_ptr cxx11_defaulted_functions cxx11_auto_declarations cxx11_unified_initialization_syntax ] [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ run test_octonion.cpp
@@ -1114,6 +1122,8 @@ test-suite misc :
        /boost/test//boost_unit_test_framework ]
    [ run test_ulp.cpp /boost/test//boost_unit_test_framework ]
    [ run git_issue_1419.cpp ]
+   [ run git_issue_1621.cpp ]
+   [ run git_issue_1637.cpp ]
    [ compile-fail git_issue_1421.cpp ]
 
 #   [ run __temporary_test.cpp test_instances//test_instances : : : <test-info>always_show_run_output <pch>off ]
@@ -1132,7 +1142,13 @@ test-suite interpolators :
    [ run test_agm.cpp  : : : <toolset>msvc:<cxxflags>/bigobj [ requires cxx17_if_constexpr cxx17_std_apply ]  $(float128_type) ]
    [ run test_rsqrt.cpp  : : : <toolset>msvc:<cxxflags>/bigobj [ requires cxx17_if_constexpr cxx17_std_apply ]  $(float128_type) ]
    [ run test_cohen_acceleration.cpp  : : : <toolset>msvc:<cxxflags>/bigobj [ requires cxx17_if_constexpr cxx17_std_apply ]  $(float128_type) ]
+   [ run test_trend_filter.cpp : : : <toolset>msvc:<cxxflags>/bigobj ]
+   [ run test_symlets.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ run test_wavelet_denoise.cpp : : : <toolset>msvc:<cxxflags>/bigobj [ requires cxx17_if_constexpr cxx17_std_apply ] ]
    [ compile compile_test/test_filters_daubechies_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ]  ]
+   [ compile compile_test/test_filters_trend_filter_incl.cpp ]
+   [ compile compile_test/test_filters_symlets_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ]  ]
+   [ compile compile_test/test_filters_wavelet_denoise_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ]  ]
    [ compile compile_test/test_sf_daubechies_scaling_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ]  ]
    [ run test_whittaker_shannon.cpp : : :  [ requires cxx11_auto_declarations cxx11_constexpr cxx11_smart_ptr cxx11_defaulted_functions ] $(float128_type) ]
    [ run test_cardinal_quadratic_b_spline.cpp : : :  [ requires cxx11_auto_declarations cxx11_constexpr cxx11_smart_ptr cxx11_defaulted_functions ] ]
@@ -1153,8 +1169,14 @@ test-suite interpolators :
    [ run test_differential_evolution.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
    [ run test_jso.cpp : : : <toolset>clang:<cxxflags>-fno-fast-math <toolset>gcc:<cxxflags>-fno-fast-math <toolset>msvc:<cxxflags>"/fp:precise" [ requires cxx17_if_constexpr cxx17_std_apply ] ]
    [ run test_random_search.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
-   [ run test_cma_es.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] [ check-target-builds ../../multiprecision/config//has_eigen : : <build>no ] ]
+   [ run test_multilevel_coordinate_search.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ run test_turbo.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ run test_dycors.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ run test_cma_es.cpp : : : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
    [ compile compile_test/test_random_search_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ compile compile_test/test_multilevel_coordinate_search_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ compile compile_test/test_turbo_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
+   [ compile compile_test/test_dycors_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
    [ compile compile_test/test_differential_evolution_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
    [ compile compile_test/test_jso_incl.cpp : [ requires cxx17_if_constexpr cxx17_std_apply ] ]
 ;
@@ -1285,6 +1307,13 @@ test-suite quadrature :
    [ run test_gauss_hermite_quadrature.cpp : : : $(float128_type) [ requires cxx17_if_constexpr ] <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ]
    [ run test_gauss_hermite_quadrature_eigen.cpp : : : [ requires cxx17_if_constexpr ]
      [ check-target-builds ../../multiprecision/config//has_eigen : : <build>no ] ]
+   [ run test_gauss_laguerre_quadrature.cpp : : : $(float128_type) [ requires cxx17_if_constexpr ] <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ]
+   [ run test_gauss_laguerre_quadrature_eigen.cpp : : : [ requires cxx17_if_constexpr ]
+     [ check-target-builds ../../multiprecision/config//has_eigen : : <build>no ] ]
+   [ run test_gauss_jacobi_quadrature.cpp : : : $(float128_type) [ requires cxx17_if_constexpr ] <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ]
+   [ run test_gauss_jacobi_quadrature_eigen.cpp : : : [ requires cxx17_if_constexpr ]
+     [ check-target-builds ../../multiprecision/config//has_eigen : : <build>no ] ]
+   [ run test_leja_quadrature.cpp : : : [ requires cxx17_if_constexpr cxx11_hdr_thread ] [ check-target-builds ../config//has_float128 "GCC libquadmath and __float128 support" : <linkflags>-lquadmath ] <toolset>msvc:<cxxflags>/bigobj <toolset>gcc-mingw:<cxxflags>-Wa,-mbig-obj <target-os>linux:<linkflags>"-pthread" ]
 
    [ run test_naive_monte_carlo.cpp : : :
      <toolset>msvc:<cxxflags>/bigobj <define>TEST=1  [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_hdr_thread cxx11_hdr_atomic cxx11_decltype cxx11_hdr_future cxx11_hdr_chrono cxx11_hdr_random cxx11_allocator ]
@@ -1433,6 +1462,7 @@ test-suite gradient_based_optimizers
         [ run test_gradient_descent_optimizer.cpp : : : <toolset>gcc-mingw:<cxxflags>-Wa,-mbig-obj <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ] 
         [ run test_nesterov_optimizer.cpp : : : <toolset>gcc-mingw:<cxxflags>-Wa,-mbig-obj <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ] 
         [ run test_lbfgs.cpp : : : <toolset>gcc-mingw:<cxxflags>-Wa,-mbig-obj <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ] 
+        [ run test_trust_region_newton.cpp : : : <toolset>gcc-mingw:<cxxflags>-Wa,-mbig-obj <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release ]
     ;
 # BEGIN AUTODIFF LONG RUNNING TESTS
 test-suite autodiff-long-running-tests
@@ -1606,13 +1636,13 @@ test-suite autodiff-long-running-tests
 test-suite long-running-tests :
    [ run test_0F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=3 release $(float128_type) : test_0F1_3 ]
    [ run test_0F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=4 release : test_0F1_4 ]
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=5 <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_real_concept ]
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_quad ]
-   [ run test_1F1.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_dec_40 ]
-   [ run test_1F1_regularized.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_quad ]
-   [ run test_1F1_regularized.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_regularized_dec_40 ]
-   [ run test_1F1_log.cpp /boost/test//boost_unit_test_framework : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_log_quad ]
-   [ run test_1F1_log.cpp /boost/test//boost_unit_test_framework : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_log_dec_40 ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=5 <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_real_concept ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_quad ]
+   [ run test_1F1.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_dec_40 ]
+   [ run test_1F1_regularized.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] <toolset>clang:<cxxflags>-Wno-literal-range : test_1F1_regularized_quad ]
+   [ run test_1F1_regularized.cpp : : : [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_regularized_dec_40 ]
+   [ run test_1F1_log.cpp : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_log_quad ]
+   [ run test_1F1_log.cpp : : : release [ requires cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_1F1_log_dec_40 ]
    [ run test_pFq.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_hdr_initializer_list cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=6 release $(float128_type) <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_pFq_quad ]
    [ run test_pFq.cpp /boost/test//boost_unit_test_framework : : : [ requires cxx11_hdr_initializer_list cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] <define>TEST=7 release <toolset>clang:<cxxflags>-Wno-literal-range [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] : test_pFq_dec_40 ]
    [ run test_pFq_precision.cpp ../tools//mpfr ../tools//gmp /boost/test//boost_unit_test_framework /boost/system//boost_system /boost/chrono//boost_chrono : : : [ check-target-builds ../config//has_mpfr : : <build>no ] [ requires cxx11_hdr_initializer_list cxx11_auto_declarations cxx11_lambdas cxx11_unified_initialization_syntax cxx11_smart_ptr ] release <toolset>clang:<cxxflags>-Wno-literal-range ]
@@ -1717,6 +1747,9 @@ test-suite concepts :
 
    [ run  compile_test/test_sf_1f0_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ run  compile_test/test_sf_0f1_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
+   [ run  compile_test/test_sf_spheroidal_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
+   [ run  compile_test/test_sf_struve_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
+   [ run  compile_test/test_sf_fresnel_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ run  compile_test/test_sf_2f0_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ run  compile_test/test_sf_1f1_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ run  compile_test/test_sf_pfq_incl.cpp compile_test_main  : : : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
@@ -1814,6 +1847,7 @@ test-suite concepts :
    [ compile  compile_test/test_tools_real_cast_inc.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ compile  compile_test/test_tools_remez_inc.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ compile  compile_test/test_tools_roots_inc.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
+   [ compile  compile_test/test_tools_multivariate_roots_incl.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ compile  compile_test/test_tools_series_inc.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ compile  compile_test/test_tools_solve_inc.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
    [ compile  compile_test/test_tools_stats_inc.cpp   : [ check-target-builds ../config//is_ci_sanitizer_run "Sanitizer CI run" : <build>no ] ]
@@ -1988,6 +2022,7 @@ alias no_eh_tests :
    #test_tools_ulps_plot_incl
    #test_tools_ulps_heatmap_incl
    test_tools_workaround_incl
+   git_issue_1621
 ;
 
 explicit no_eh_tests ;

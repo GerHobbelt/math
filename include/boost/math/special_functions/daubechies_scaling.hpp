@@ -19,6 +19,7 @@
 #include <iostream>
 #include <memory>
 #endif
+#include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/math/special_functions/detail/daubechies_scaling_integer_grid.hpp>
 #include <boost/math/filters/daubechies.hpp>
 #include <boost/math/interpolators/detail/cubic_hermite_detail.hpp>
@@ -232,6 +233,7 @@ struct null_interpolator
     {
         return 1;
     }
+    int64_t bytes() const { return sizeof(*this); }
 };
 
 } // namespace detail
@@ -266,7 +268,7 @@ public:
         static_assert(p > 0, "Daubechies scaling functions must have at least 1 vanishing moment.");
         if constexpr (p == 1)
         {
-            return;
+            m_interpolator = std::make_shared<detail::null_interpolator>();
         }
         else {
             if (grid_refinements < 0)
@@ -360,9 +362,9 @@ public:
 
     inline Real operator()(Real x) const
     {
-        if (x <= 0 || x >= 2*p-1)
+        if (!(x > 0 && x < 2*p-1))
         {
-            return 0;
+            return (BOOST_MATH_NAMESPACE::isnan)(x) ? x : Real(0);
         }
         return (*m_interpolator)(x);
     }
@@ -370,9 +372,9 @@ public:
     inline Real prime(Real x) const
     {
         static_assert(p > 2, "The 3-vanishing moment Daubechies scaling function is the first which is continuously differentiable.");
-        if (x <= Real(0) || x >= 2*p-1)
+        if (!(x > Real(0) && x < 2*p-1))
         {
-            return 0;
+            return (BOOST_MATH_NAMESPACE::isnan)(x) ? x : Real(0);
         }
         return m_interpolator->prime(x);
     }
@@ -380,9 +382,9 @@ public:
     inline Real double_prime(Real x) const
     {
         static_assert(p >= 6, "Second derivatives require at least 6 vanishing moments.");
-        if (x <= 0 || x >= 2*p - 1)
+        if (!(x > 0 && x < 2*p - 1))
         {
-            return Real(0);
+            return (BOOST_MATH_NAMESPACE::isnan)(x) ? x : Real(0);
         }
         return m_interpolator->double_prime(x);
     }

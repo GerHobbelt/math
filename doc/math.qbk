@@ -690,6 +690,12 @@ and as a CD ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22.
 [/Airy Functions]
 [include sf/airy.qbk]
 
+[/Struve Functions]
+[include sf/struve.qbk]
+
+[/Fresnel Integrals]
+[include sf/fresnel.qbk]
+
 [section:ellint Elliptic Integrals]
 [include sf/ellint_introduction.qbk]
 [include sf/ellint_carlson.qbk]
@@ -701,6 +707,9 @@ and as a CD ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22.
 
 [/Jacobi Theta Functions]
 [include sf/jacobi_theta.qbk]
+
+[/Spheroidal Wave Functions]
+[include sf/spheroidal.qbk]
 
 [/ Lambert W function]
 [include sf/lambert_w.qbk]
@@ -739,6 +748,9 @@ and as a CD ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22.
 [include optimization/differential_evolution.qbk]
 [include optimization/jso.qbk]
 [include optimization/random_search.qbk]
+[include optimization/multilevel_coordinate_search.qbk]
+[include optimization/turbo.qbk]
+[include optimization/dycors.qbk]
 [include optimization/cma_es.qbk]
 [include optimization/gradient_optimizers.qbk]
 [endmathpart] [/mathpart optimization Optimization]
@@ -772,6 +784,9 @@ and as a CD ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22.
 [include quadrature/gauss.qbk]
 [include quadrature/gauss_kronrod.qbk]
 [include quadrature/gauss_hermite.qbk]
+[include quadrature/gauss_laguerre.qbk]
+[include quadrature/gauss_jacobi.qbk]
+[include quadrature/leja.qbk]
 [include quadrature/double_exponential.qbk]
 [include quadrature/ooura_fourier_integrals.qbk]
 [include quadrature/naive_monte_carlo.qbk]
@@ -785,6 +800,8 @@ and as a CD ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22.
 
 [mathpart filters Filters]
 [include filters/daubechies.qbk]
+[include filters/trend_filter.qbk]
+[include filters/wavelet_denoise.qbk]
 [endmathpart]
 
 [mathpart fft Fast Fourier Transform]

@@ -337,19 +337,24 @@ BOOST_MATH_NAMESPACE_BEGIN // Math functions (in roughly alphabetic order).
    tools::promote_args_t<T>
       laguerre(unsigned n, unsigned m, T x, const Policy& pol);
 
+   // laguerre(n, x, pol), laguerre(n, m, x) with an integer order m, or laguerre(n, alpha, x) with a real alpha.
    template <class T1, class T2>
    struct laguerre_result
    {
       using type = typename std::conditional<
          policies::is_policy<T2>::value,
          typename tools::promote_args<T1>::type,
-         typename tools::promote_args<T2>::type
+         typename std::conditional<std::is_integral<T1>::value, tools::promote_args<T2>, tools::promote_args<T1, T2>>::type::type
       >::type;
    };
 
    BOOST_MATH_EXPORT template <class T1, class T2>
    typename laguerre_result<T1, T2>::type
       laguerre(unsigned n, T1 m, T2 x);
+
+   BOOST_MATH_EXPORT template <class T1, class T2, class Policy>
+   typename std::enable_if<!std::is_integral<T1>::value, tools::promote_args_t<T1, T2>>::type
+      laguerre(unsigned n, T1 alpha, T2 x, const Policy& pol);
 
    BOOST_MATH_EXPORT template <class T>
    BOOST_MATH_GPU_ENABLED tools::promote_args_t<T>
@@ -362,6 +367,24 @@ BOOST_MATH_NAMESPACE_BEGIN // Math functions (in roughly alphabetic order).
    BOOST_MATH_EXPORT template <class T1, class T2, class T3>
    BOOST_MATH_GPU_ENABLED tools::promote_args_t<T1, T2, T3>
       hermite_next(unsigned n, T1 x, T2 Hn, T3 Hnm1);
+
+   BOOST_MATH_EXPORT template <class T, class Policy>
+   std::vector<T> hermite_zeros(unsigned n, const Policy& pol);
+
+   BOOST_MATH_EXPORT template <class T>
+   std::vector<T> hermite_zeros(unsigned n);
+
+   BOOST_MATH_EXPORT template <class T, class Policy>
+   std::vector<T> laguerre_zeros(unsigned n, T alpha, const Policy& pol);
+
+   BOOST_MATH_EXPORT template <class T>
+   std::vector<T> laguerre_zeros(unsigned n, T alpha = 0);
+
+   BOOST_MATH_EXPORT template <class T, class Policy>
+   std::vector<T> jacobi_zeros(unsigned n, T alpha, T beta, const Policy& pol);
+
+   BOOST_MATH_EXPORT template <class T>
+   std::vector<T> jacobi_zeros(unsigned n, T alpha, T beta);
 
    BOOST_MATH_EXPORT template<class T1, class T2, class T3>
    tools::promote_args_t<T1, T2, T3> chebyshev_next(T1 const & x, T2 const & Tn, T3 const & Tn_1);
@@ -1461,6 +1484,15 @@ BOOST_MATH_NAMESPACE_BEGIN // Math functions (in roughly alphabetic order).
    hermite(unsigned n, T x){ return ::BOOST_MATH_NAMESPACE::hermite(n, x, Policy()); }\
 \
    using BOOST_MATH_NAMESPACE::hermite_next;\
+\
+   template <class T>\
+   inline std::vector<T> hermite_zeros(unsigned n){ return ::BOOST_MATH_NAMESPACE::hermite_zeros<T>(n, Policy()); }\
+\
+   template <class T>\
+   inline std::vector<T> laguerre_zeros(unsigned n, T alpha = 0){ return ::BOOST_MATH_NAMESPACE::laguerre_zeros<T>(n, alpha, Policy()); }\
+\
+   template <class T>\
+   inline std::vector<T> jacobi_zeros(unsigned n, T alpha, T beta){ return ::BOOST_MATH_NAMESPACE::jacobi_zeros<T>(n, alpha, beta, Policy()); }\
 \
    using BOOST_MATH_NAMESPACE::chebyshev_next;\
 \

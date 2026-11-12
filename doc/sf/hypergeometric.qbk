@@ -68,8 +68,11 @@ This occurs only when `b` is an integer <= 0.
 [h4 Implementation]
 
 The function is implemented via its defining series wherever convergent.
+For binary types, where the series alternates (z < 0, or b < 0) the rounding errors of its terms and of their sum
+are carried along with error-free transforms, which bounds the error by about [epsilon][super 2] times the largest term.
+This is used while -z < digits[super 2]/16 or |z/b| < digits/8, and one of the Bessel function relations beyond.
 
-For a divergent series we use the continued fraction as long as the result is not too small:
+For other types, for a divergent series we use the continued fraction as long as the result is not too small:
 
 [equation hyper_0f1_cf]
 
@@ -393,6 +396,7 @@ For /a,b,z > 0/ and large we can either:
 For ['b < 0] and ['a] tiny we would normally use A&S 13.3.6, but when that is non-convergent for some inputs we can use the forward recurrence relation on ['b] to
 calculate the ratio ['[sub 1]F[sub 1](a, -b, z)/[sub 1]F[sub 1](a, 1-b, z)] and then iterate forwards until ['b > 0] and compute a reference value
 and normalize (Millers Method).
+Otherwise, for ['b < -1], we sum the series after Kummer's relation, whose terms change sign at most once.
 In the same domain when ['b] is near -1 we can use a single backwards recursion on /b/ to compute ['[sub 1]F[sub 1](a, -b, z)]
 from ['[sub 1]F[sub 1](a, 2-b, z)] and ['[sub 1]F[sub 1](/a/, 1-/b/, /z/)] even though technically we are recursing in the unstable direction.
 

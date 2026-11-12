@@ -5,6 +5,8 @@
 
 import inspect
 import math
+import pathlib
+import re
 import warnings
 
 import mpmath as mp
@@ -74,7 +76,6 @@ CASES = [
     ("ligamma", (2.5, 1.5), lambda a, z: mp.log(mp.gammainc(a, z))),
     ("ligamma_lower", (2.5, 1.5), lambda a, z: mp.log(mp.gammainc(a, 0, z))),
     ("factorial", (10,), mp.factorial),
-    ("unchecked_factorial", (10,), mp.factorial),
     ("double_factorial", (9,), fac2),
     ("rising_factorial", (2.5, 4), mp.rf),
     ("falling_factorial", (6.5, 3), mp.ff),
@@ -102,6 +103,9 @@ CASES = [
     ("erfc", (2.5,), mp.erfc),
     ("erf_inv", (0.3,), mp.erfinv),
     ("erfc_inv", (0.3,), lambda q: mp.erfinv(1 - mp.mpf(q))),
+    ("fresnel_c", (1.5,), mp.fresnelc),
+    ("fresnel_s", (1.5,), mp.fresnels),
+    ("fresnel_cis", (1.5,), lambda x: mp.fresnelc(x) + 1j * mp.fresnels(x)),
     ("expint", (1.5,), mp.ei),
     ("expint", (3, 1.5), mp.expint),
     ("zeta", (2.5,), mp.zeta),
@@ -274,29 +278,32 @@ def test_array_matches_scalar(case):
     assert np.all(got == want)
 
 
-# Not elementwise, so tested on their own below.
-SIEVE = {"prime_sieve", "prime_range", "prime_count", "polynomial_roots", "polynomial_roots_aberth", "polynomial_roots_companion_matrix"}
-QUADRATURE = {"tanh_sinh", "exp_sinh", "sinh_sinh", "trapezoidal", "gauss", "gauss_kronrod", "gauss_hermite",
-              "ooura_fourier_sin", "ooura_fourier_cos", "van_den_bos_unit_square"}
-OPTIMIZATION = {"differential_evolution", "jso", "random_search", "cma_es"}
-
-
 def test_every_function_has_a_case():
-    names = {n for n in bm.__all__ if not inspect.isclass(getattr(bm, n))}
-    covered = {c[0] for c in CASES} | SIEVE | QUADRATURE | OPTIMIZATION
-    assert names - covered == set()
+    # Outside CASES, each public name but the constants and the result records is called by name in some test file.
+    tests = "".join(p.read_text() for p in pathlib.Path(__file__).parent.glob("test_*.py"))
+    modules = [bm] + [getattr(bm, n) for n in bm.__all__ if inspect.ismodule(getattr(bm, n)) and n != "constants"]
+    names = {n for m in modules for n in getattr(m, "__all__", dir(m)) if not n.startswith("_")
+             and not (inspect.isclass(getattr(m, n)) and issubclass(getattr(m, n), tuple))}
+    assert {n for n in names - {c[0] for c in CASES} if not re.search(rf"\b{n}\b", tests)} == set()
+
+
+def test_submodule_imports():
+    import boost.math.distributions as d
+    from boost.math.quadrature import tanh_sinh
+    assert d is bm.distributions and d.normal_distribution.__module__ == "boost.math.distributions"
+    assert tanh_sinh is bm.quadrature.tanh_sinh
 
 
 def test_optimization():
+    from boost.math import optimize as bm  # the functions moved to submodules
     def f(x):
         return (x[0] - 1) ** 2 + (x[1] + 2) ** 2
     lo, hi = [-5.0, -5.0], [5.0, 5.0]
     runs = [bm.differential_evolution(f, lo, hi, population=50, max_generations=200, threads=4), bm.jso(f, lo, hi),
-            bm.random_search(f, lo, hi, max_function_calls=20000)]
-    if hasattr(bm, "cma_es"):  # Only where Eigen was found.
-        runs.append(bm.cma_es(f, lo, hi, max_generations=200))
+            bm.random_search(f, lo, hi, max_function_calls=20000), bm.multilevel_coordinate_search(f, lo, hi),
+            bm.cma_es(f, lo, hi, max_generations=200)]
     for x in runs:
-        assert f(x) < 1e-2
+        assert f(x.x) < 1e-2
     def bad(x):
         raise RuntimeError("boom")
     with pytest.raises(RuntimeError):
@@ -306,6 +313,10 @@ def test_optimization():
 
 
 def test_quadrature():
+    from boost.math import quadrature as bm  # the functions moved to submodules
+    def second_moment(rule):
+        x, w = rule
+        return (w @ x**2,)
     cases = [
         (bm.tanh_sinh(lambda x: 1 / math.sqrt(x), 0, 1), 2.0),
         (bm.exp_sinh(lambda x: math.exp(-x)), 1.0),
@@ -314,6 +325,25 @@ def test_quadrature():
         (bm.gauss(lambda x: x * x, 0, 1, points=7), 1 / 3),
         (bm.gauss_kronrod(math.sin, 0, math.pi, points=61), 2.0),
         (bm.gauss_hermite(lambda x: x * x), math.sqrt(math.pi) / 2),
+        (bm.gauss_laguerre(lambda x: x * x, alpha=0.5), math.gamma(3.5)),
+        (bm.gauss_jacobi(10, 0.5, -0.5).integrate(lambda x: x * x), math.pi / 2),
+        (bm.gauss_hermite_averaged(lambda x: x * x), math.sqrt(math.pi) / 2),
+        (bm.gauss_laguerre_averaged(lambda x: x * x, alpha=0.5), math.gamma(3.5)),
+        (bm.gauss_jacobi(10, 0.5, -0.5).integrate_averaged(lambda x: x * x), math.pi / 2),
+        (second_moment(bm.gauss_hermite_rule(5)), math.sqrt(math.pi) / 2),
+        (second_moment(bm.gauss_laguerre_rule(5, alpha=0.5)), math.gamma(3.5)),
+        (second_moment(bm.gauss_jacobi_rule(5, 0.5, -0.5)), math.pi / 2),
+        (bm.leja_legendre().integrate(lambda x: x * x), 2 / 3),
+        (bm.leja_hermite().integrate(lambda x: x * x), math.sqrt(math.pi) / 2),
+        (bm.leja_legendre().integrate(math.exp), math.e - 1 / math.e),
+        (bm.leja_hermite().integrate(math.cos), math.sqrt(math.pi) * math.exp(-0.25)),
+        (bm.leja_laguerre().integrate(lambda x: x * x), 2),
+        (bm.leja_laguerre(alpha=0.5).integrate(lambda x: 1.0), math.sqrt(math.pi) / 2),
+        (bm.leja_jacobi(alpha=-0.5, beta=-0.5).integrate(lambda x: x * x), math.pi / 2),
+        (bm.leja_legendre().integrate(math.exp, -2, 5), math.exp(5) - math.exp(-2)),
+        (bm.leja_legendre().integrate(lambda x: x, 2, 0, tolerance=1e-12), -2),
+        # (4 - x)^alpha (x - 1)^beta over [1, 4]: 3^(alpha + beta + 1) B(alpha + 1, beta + 1).
+        (bm.leja_jacobi(alpha=0.5, beta=-0.25).integrate(lambda x: 1.0, 1, 4), 3 ** 1.25 * math.gamma(1.5) * math.gamma(0.75) / math.gamma(2.25)),
         (bm.ooura_fourier_sin(lambda t: 1 / t, 1.0), math.pi / 2),
         (bm.ooura_fourier_cos(lambda t: 1 / (1 + t * t), 1.0), math.pi / (2 * math.e)),
         (bm.van_den_bos_unit_square(lambda x, y: x * y), 0.25),
@@ -322,6 +352,49 @@ def test_quadrature():
         assert math.isclose(result[0], exact, rel_tol=1e-12)
     with pytest.raises(ValueError):
         bm.gauss(math.sin, 0, 1, points=8)
+    # (integral, L1) from the Gauss rule; (integral, error, L1) from the averaged rule, whose error bounds its own.
+    assert len(bm.gauss_hermite(math.cos)) == 2
+    Q, error, L1 = bm.gauss_hermite_averaged(math.cos, points=7)
+    assert abs(Q - math.sqrt(math.pi) * math.exp(-0.25)) <= error < 1e-6
+    with pytest.raises(RuntimeError):
+        bm.gauss_jacobi(10, -0.9, -0.9).integrate_averaged(math.cos)
+    rule = bm.leja_legendre()
+    assert len(rule.weights(n=5)) == 5 and len(rule.abscissa) == 5 and rule.abscissa[0] == 0.0
+    with pytest.raises(ValueError):
+        rule.weights(n=rule.max_points + 1)
+    with pytest.raises(TypeError):
+        rule.integrate(math.cos, 5)
+    assert rule.integrate(math.cos, 1, 1) == (0, 0, 0)
+    with pytest.raises(ValueError):
+        rule.integrate(math.cos, 0, math.inf)
+    with pytest.raises(TypeError):
+        bm.leja_hermite().integrate(math.cos, 0, 1)
+    # The box [0, 1] x [-1, 2] x [3, 5], from lists or arrays.
+    box = (math.exp(0.5) - 1) * 2 * (math.exp(1) - math.exp(-2)) * 4 * (math.exp(1.25) - math.exp(0.75))
+    for a, b in [([0, -1, 3], [1, 2, 5]), (np.array([0.0, -1, 3]), np.array([1.0, 2, 5]))]:
+        Q, error, L1 = bm.sparse_grid(lambda x: math.exp(x[0] / 2 - x[1] + x[2] / 4), a, b, rule=rule, max_calls=100000)
+        assert abs(Q - box) <= max(error, 1e-13 * L1) <= 1.5e-8 * L1
+    with pytest.raises(ValueError):
+        bm.sparse_grid(lambda x: 1.0, [0, 0], [1], rule=rule, max_calls=100)
+    with pytest.raises(TypeError):
+        bm.sparse_grid(lambda x: 1.0, [0], [1], rule=bm.leja_hermite(), max_calls=100)
+    Q, error, L1 = bm.sparse_grid(lambda x: math.exp(x[0] + x[1] / 2), rule=bm.leja_legendre(), dimension=2, max_calls=1000)
+    assert abs(Q - (math.e - 1 / math.e) * 2 * (math.exp(0.5) - math.exp(-0.5))) <= max(error, 1e-14) <= 1e-7 * L1
+    Q, error, L1 = bm.sparse_grid(lambda x: x[2] ** 2, rule=bm.leja_hermite(), dimension=3, max_calls=1000)
+    assert abs(Q - math.pi ** 1.5 / 2) < 1e-13
+    Q, error, L1 = bm.sparse_grid(lambda x: x[0] * x[1], rule=bm.leja_laguerre(), dimension=2, max_calls=1000)
+    assert abs(Q - 1) < 1e-13
+    # 0 at the first point and on the axes through it.
+    Q, error, L1 = bm.sparse_grid(lambda x: x[0] ** 2 * x[1] ** 2, [-1, -1], [1, 1], rule=rule)
+    assert abs(Q - 4 / 9) < 1e-13
+    Q, error, L1 = bm.sparse_grid(lambda x: x[0] ** 2 * x[1] ** 2, rule=bm.leja_hermite(), dimension=2)
+    assert abs(Q - math.pi / 4) < 1e-13
+    with pytest.raises(ValueError):
+        bm.leja_jacobi(alpha=-1, beta=0)
+    with pytest.raises(ValueError):
+        bm.leja_laguerre(alpha=math.inf)
+    with pytest.raises(ValueError):
+        bm.leja_jacobi(alpha=math.inf, beta=0)
     with pytest.raises(ZeroDivisionError):
         bm.tanh_sinh(lambda x: 1 / 0, 0, 1)
 
@@ -414,6 +487,68 @@ def test_array_errors_warn_and_give_nan():
     assert "2 of 3" in str(w[0].message)
 
 
+def test_errstate():
+    x = np.array([-1.0, 200.0, 3.0])
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        with pytest.raises(RuntimeWarning, match="domain error in 1 of 3"):
+            bm.tgamma(x)
+        with bm.errstate(domain="ignore"):
+            got = bm.tgamma(x)
+            assert math.isnan(bm.tgamma(-1.0))
+    # Overflows give a signed infinity, and are ignored for arrays by default.
+    assert np.isnan(got[0]) and got[1] == math.inf and got[2] == 2
+    assert bm.tgamma(np.array([-1e-320]))[0] == -math.inf
+    with bm.errstate(all="raise"):
+        with pytest.raises(OverflowError):
+            bm.tgamma(np.array([200.0]))
+    with bm.errstate(overflow="warn"), pytest.warns(RuntimeWarning, match="overflow"):
+        bm.tgamma(np.array([200.0]))
+    # A 'warn' category warns before a 'raise' category raises.
+    with bm.errstate(domain="warn", overflow="raise"), pytest.warns(RuntimeWarning, match="domain error in 1 of 2"):
+        with pytest.raises(OverflowError):
+            bm.tgamma(np.array([-1.0, 200.0]))
+    assert bm.geterr() == {"domain": "default", "overflow": "default", "evaluation": "default"}
+    with pytest.raises(ValueError):
+        bm.seterr(domain="loud")
+    dist = bm.distributions.cauchy_distribution()
+    with bm.errstate(domain="ignore"):
+        assert math.isnan(dist.mean()) and math.isnan(dist.cdf(np.array(math.nan)))
+
+
+def test_numpy_scalars():
+    assert type(bm.tgamma(np.float64(2.5))) is np.float64 and type(bm.tgamma(2.5)) is float
+    assert type(bm.tgamma(np.int64(3))) is np.float64 and bm.tgamma(np.int64(3)) == 2
+    assert type(bm.legendre_p(np.int32(2), 0.5)) is np.float64 and type(bm.prime(np.int64(3))) is np.uint64
+    assert type(bm.gamma_p(np.float32(2), 1.5)) is np.float32
+    assert type(bm.distributions.normal_distribution().cdf(np.float64(0.5))) is np.float64
+    with pytest.raises(ValueError):
+        bm.tgamma(np.float64(-1))
+
+
+def test_threads():
+    x = np.linspace(0.5, 20, 100001).reshape(11, -1)[:, ::3]
+    want = bm.tgamma(x)
+    assert np.array_equal(bm.tgamma(x, threads=4), want) and np.array_equal(bm.tgamma(x, threads=0), want)
+    dist = bm.distributions.normal_distribution()
+    assert np.array_equal(dist.cdf(x, threads=3), dist.cdf(x))
+    x[3, 7] = x[9, 5] = -1.0
+    with pytest.warns(RuntimeWarning, match="2 of"):
+        assert np.isnan(bm.tgamma(x, threads=4)).sum() == 2
+    with pytest.raises(ValueError):
+        bm.tgamma(x, threads=-1)
+    with pytest.raises(TypeError):
+        bm.erf(x, 4)  # threads is keyword-only
+
+
+def test_fft():
+    f = bm.fft.fft(8)
+    assert repr(f) == "fft(n=8)" and repr(bm.fft.real_fft(8)) == "real_fft(n=8)" and repr(bm.fft.dct_ii(4)) == "dct_ii(n=4)"
+    x = np.arange(8)
+    assert np.allclose(f.transform(x), np.fft.fft(x)) and np.allclose(f.inverse_transform(x * 1.0), np.fft.ifft(x))
+    assert np.allclose(bm.fft.real_fft(8).transform(x * 1.0), np.fft.rfft(x))
+
+
 # --- distributions ----------------------------------------------------------
 
 CONTINUOUS = [
@@ -468,15 +603,15 @@ TRANSFORMS = {"fft", "real_fft", "dct_ii"}
 
 
 def test_every_distribution_has_a_case():
-    names = {n for n in bm.__all__ if inspect.isclass(getattr(bm, n))}
-    assert names - TRANSFORMS == {c[0] for c in CONTINUOUS + DISCRETE}
+    names = {n for n in dir(bm.distributions) + dir(bm.fft) if not n.startswith("_")}
+    assert names - TRANSFORMS - {"empirical_cumulative_distribution_function", "find_location", "find_scale"} == {c[0] for c in CONTINUOUS + DISCRETE}
     assert TRANSFORMS <= names
 
 
 @pytest.mark.parametrize("case", CONTINUOUS, ids=lambda c: c[0])
 def test_continuous_distribution(case):
     name, params = case
-    dist = getattr(bm, name)(*params)
+    dist = getattr(bm.distributions, name)(*params)
     p = np.array([0.1, 0.5, 0.9])
     x = dist.quantile(p)
     assert np.allclose(dist.cdf(x), p, rtol=1e-9)
@@ -497,7 +632,7 @@ def test_continuous_distribution(case):
 @pytest.mark.parametrize("case", DISCRETE, ids=lambda c: c[0])
 def test_discrete_distribution(case):
     name, params = case
-    dist = getattr(bm, name)(*params)
+    dist = getattr(bm.distributions, name)(*params)
     k = np.arange(0.0, 2.0 if name == "bernoulli_distribution" else 4.0)
     assert np.allclose(np.cumsum(dist.pdf(k)), dist.cdf(k), rtol=1e-12)
     assert np.allclose(dist.cdf(k) + dist.cdf_complement(k), 1, rtol=1e-12)
@@ -510,10 +645,10 @@ def test_discrete_distribution(case):
 def test_distribution_repr(case):
     # The repr names the constructor's arguments, each a property, and rebuilds the distribution.
     name, params = case
-    dist = getattr(bm, name)(*params)
+    dist = getattr(bm.distributions, name)(*params)
     r = repr(dist)
     assert r.startswith(name + "(")
-    again = eval(r, vars(bm))
+    again = eval(r, vars(bm.distributions))
     assert repr(again) == r
     assert np.allclose(again.cdf(dist.quantile(0.3)), 0.3, rtol=1e-12) or name in {c[0] for c in DISCRETE}
     for i, value in enumerate(params):
@@ -524,13 +659,54 @@ def test_distribution_repr(case):
 
 
 def test_normal_against_mpmath():
-    dist = bm.normal_distribution(1.0, 2.0)
+    dist = bm.distributions.normal_distribution(1.0, 2.0)
     for x in (-3.0, 0.5, 4.0):
         assert close(dist.cdf(x), mp.ncdf(x, 1, 2))
         assert close(dist.pdf(x), mp.npdf(x, 1, 2))
     assert dist.mean() == 1.0 and dist.standard_deviation() == 2.0
 
 
+def test_distribution_eq_hash_and_parameters():
+    d = bm.distributions
+    assert d.normal_distribution(1, 2) == d.normal_distribution(1.0, 2.0) != d.normal_distribution(1, 3)
+    assert d.normal_distribution() != d.logistic_distribution(0, 1)
+    h = d.hyperexponential_distribution([0.3, 0.7], [1.0, 3.0])
+    assert len({d.normal_distribution(), d.normal_distribution(), h, d.hyperexponential_distribution([0.3, 0.7], [1.0, 3.0])}) == 2
+    with pytest.raises(TypeError, match="parameters must be scalars"):
+        d.normal_distribution(np.array([1.0, 2.0]))
+    with pytest.raises(ValueError):
+        d.normal_distribution(0, -1)
+
+
 def test_undefined_moment_raises():
     with pytest.raises(ValueError):
-        bm.cauchy_distribution().mean()
+        bm.distributions.cauchy_distribution().mean()
+
+
+def test_every_public_callable_is_documented():
+    import types
+
+    modules = [bm] + [m for m in vars(bm._ext).values() if isinstance(m, types.ModuleType)]
+    if hasattr(bm._ext, "_ulps_plot"):
+        from boost.math import ulps
+        modules.append(ulps)
+    missing = []
+    for module in modules:
+        for name in getattr(module, "__all__", None) or [n for n in dir(module) if not n.startswith("_")]:
+            f = getattr(module, name)
+            # Result records (named tuples) are documented by the functions that return them.
+            if isinstance(f, types.ModuleType) or not callable(f) or (isinstance(f, type) and issubclass(f, tuple)):
+                continue
+            doc = f.__doc__ or ""
+            if "https://www.boost.org/doc/libs/" not in doc or "boost::math::" in doc:
+                missing.append(module.__name__ + "." + name)
+    assert not missing, missing
+
+
+def test_nonfinite_inputs_that_used_to_hang_or_crash():
+    # A NaN rounded to an integer raises; it once became a loop count.
+    with pytest.raises(ValueError):
+        bm.hypergeometric_1F1(0.5, 0.5, math.nan)
+    assert math.isnan(bm.jacobi_sn(math.nan, 0.5))
+    with pytest.raises(ValueError):
+        bm.statistics.mode([1.0, math.nan])

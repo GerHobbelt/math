@@ -93,8 +93,21 @@ barycentric_rational_imp<Real>::barycentric_rational_imp(InputIterator1 start_x,
 template <class Real>
 barycentric_rational_imp<Real>::barycentric_rational_imp(std::vector<Real>&& x, std::vector<Real>&& y,size_t approximation_order) : m_x(std::move(x)), m_y(std::move(y))
 {
-    BOOST_MATH_ASSERT_MSG(m_x.size() == m_y.size(), "There must be the same number of abscissas and ordinates.");
-    BOOST_MATH_ASSERT_MSG(approximation_order < m_x.size(), "Approximation order must be < data length.");
+    if (m_x.size() != m_y.size())
+    {
+        throw std::domain_error("There must be the same number of abscissas and ordinates.");
+    }
+    if (approximation_order >= m_x.size())
+    {
+        throw std::domain_error("Approximation order must be < data length.");
+    }
+    for (size_t i = 0; i < m_x.size(); ++i)
+    {
+        if (BOOST_MATH_NAMESPACE::isnan(m_x[i]) || BOOST_MATH_NAMESPACE::isnan(m_y[i]))
+        {
+            throw std::domain_error(std::string("x[") + std::to_string(i) + "] or y[" + std::to_string(i) + "] is a NAN");
+        }
+    }
     BOOST_MATH_ASSERT_MSG(std::is_sorted(m_x.begin(), m_x.end()), "The abscissas must be listed in increasing order x[0] < x[1] < ... < x[n-1].");
     calculate_weights(approximation_order);
 }
@@ -187,9 +200,25 @@ Real barycentric_rational_imp<Real>::operator()(Real x) const
 template<class Real>
 Real barycentric_rational_imp<Real>::prime(Real x) const
 {
-    Real rx = this->operator()(x);
+    // rk = r(x) - y_k for the node k nearest x, in a form that does not cancel near x_k:
+    size_t k = std::lower_bound(m_x.begin(), m_x.end(), x) - m_x.begin();
+    if (k == m_x.size() || (k > 0 && x - m_x[k-1] < m_x[k] - x))
+    {
+        --k;
+    }
     Real numerator = 0;
     Real denominator = 0;
+    Real rk = 0;
+    if (x != m_x[k])
+    {
+        for (size_t i = 0; i < m_x.size(); ++i)
+        {
+            Real t = m_w[i]/(x - m_x[i]);
+            rk += t*(m_y[i] - m_y[k]);
+            denominator += t;
+        }
+        rk /= denominator;
+    }
     for(size_t i = 0; i < m_x.size(); ++i)
     {
         if (x == m_x[i])
@@ -206,9 +235,8 @@ Real barycentric_rational_imp<Real>::prime(Real x) const
             return -sum/m_w[i];
         }
         Real t = m_w[i]/(x - m_x[i]);
-        Real diff = (rx - m_y[i])/(x-m_x[i]);
+        Real diff = (rk + (m_y[k] - m_y[i]))/(x-m_x[i]);
         numerator += t*diff;
-        denominator += t;
     }
 
     return numerator/denominator;
